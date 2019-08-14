@@ -1,0 +1,26 @@
+---
+ansible_connection: local
+
+istio_operator_version: maistra-0.12.0
+
+istio_operator_namespace: istio-operator
+istio_operator:
+  NAMESPACE: "{{ istio_operator_namespace }}"
+  NAMESPACE_DISPLAY_NAME: "{{ istio_operator_namespace }}"
+
+openshift_cluster_content:
+- object: istio-operator
+  content:
+  - name: "{{ istio_operator_namespace }}"
+    template: "https://raw.githubusercontent.com/redhat-cop/openshift-templates/master/project-requests/create-project.yml"
+    params_from_vars: "{{ istio_operator }}"
+    action: create
+    tags:
+    - "{{ istio_operator_namespace }}"
+    - projects
+    - "projects-{{ istio_operator_namespace }}"
+  - name: istio-operator
+    file: "https://raw.githubusercontent.com/Maistra/istio-operator/{{ istio_operator_version }}/deploy/servicemesh-operator.yaml"
+    namespace: "{{ istio_operator_namespace }}"
+    tags:
+    - istio-operator

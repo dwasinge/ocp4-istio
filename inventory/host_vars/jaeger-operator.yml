@@ -1,0 +1,51 @@
+---
+ansible_connection: local
+
+jaeger_namespace: observability
+jaeger_operator_version: v1.13.1
+
+jaeger:
+  NAMESPACE: "{{ jaeger_namespace }}"
+  NAMESPACE_DISPLAY_NAME: "{{ jaeger_namespace }}"
+
+openshift_cluster_content:
+- object: jaeger-operator
+  content:
+  - name: "{{ jaeger_namespace }}"
+    template: "https://raw.githubusercontent.com/redhat-cop/openshift-templates/master/project-requests/create-project.yml"
+    params_from_vars: "{{ jaeger }}"
+    action: create
+    tags:
+    - "{{ jaeger_namespace }}"
+    - projects
+    - "projects-{{ jaeger_namespace }}"
+  - name: jaeger-custom-resource-definition
+    file: "https://raw.githubusercontent.com/jaegertracing/jaeger-operator/{{ jaeger_operator_version }}/deploy/crds/jaegertracing_v1_jaeger_crd.yaml"
+    namespace: "{{ jaeger_namespace }}"
+    tags:
+    - jaeger-operator
+    - crd
+  - name: jaeger-service-account
+    file: "https://raw.githubusercontent.com/jaegertracing/jaeger-operator/{{ jaeger_operator_version }}/deploy/service_account.yaml"
+    namespace: "{{ jaeger_namespace }}"
+    tags:
+    - jaeger-operator
+    - sa
+  - name: jaeger-role
+    file: "https://raw.githubusercontent.com/jaegertracing/jaeger-operator/{{ jaeger_operator_version }}/deploy/role.yaml"
+    namespace: "{{ jaeger_namespace }}"
+    tags:
+    - jaeger-operator
+    - role
+  - name: jaeger-role-binding
+    file: "https://raw.githubusercontent.com/jaegertracing/jaeger-operator/{{ jaeger_operator_version }}/deploy/role_binding.yaml"
+    namespace: "{{ jaeger_namespace }}"
+    tags:
+    - jaeger-operator
+    - role-binding
+  - name: jaeger-operator
+    file: "https://raw.githubusercontent.com/jaegertracing/jaeger-operator/{{ jaeger_operator_version }}/deploy/operator.yaml"
+    namespace: "{{ jaeger_namespace }}"
+    tags:
+    - jaeger-operator
+    - operator

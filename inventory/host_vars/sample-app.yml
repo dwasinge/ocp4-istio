@@ -1,0 +1,45 @@
+---
+ansible_connection: local
+
+sample_app_namespace: bookinfo
+
+app:
+  NAMESPACE: "{{ sample_app_namespace }}"
+  NAMESPACE_DISPLAY_NAME: "{{ sample_app_namespace }}"
+
+scc:
+  NAMESPACE: "{{ sample_app_namespace }}"
+
+openshift_cluster_content:
+- object: sample application
+  content:
+  - name: create sample app project
+    template: "https://raw.githubusercontent.com/redhat-cop/openshift-templates/master/project-requests/create-project.yml"
+    params_from_vars: "{{ app }}"
+    action: create
+    tags:
+    - "{{ sample_app_namespace }}"
+    - projects
+    - "projects-{{ sample_app_namespace }}"
+  - name: create sample app anyuid scc
+    template: "{{ playbook_dir }}/templates/sample-app/scc-anyuid-template.yml"
+    params_from_vars: "{{ scc }}"
+    action: create
+    tags:
+    - scc
+  - name: create sample app priviledge scc
+    template: "{{ playbook_dir }}/templates/sample-app/scc-privileged-template.yml"
+    params_from_vars: "{{ scc }}"
+    action: create
+    tags:
+    - scc
+  - name: create sample app
+    file: "https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo.yaml"
+    namespace: "{{ sample_app_namespace }}"
+    tags:
+    - sample-app
+  - name: create sample app gateway
+    file: "https://raw.githubusercontent.com/Maistra/bookinfo/master/bookinfo-gateway.yaml"
+    namespace: "{{ sample_app_namespace }}"
+    tags:
+    - sample-app-gateway

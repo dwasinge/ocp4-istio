@@ -1,0 +1,53 @@
+---
+kind: Template
+objects:
+- readOnlyRootFilesystem: false
+  users:
+  - system:serviceaccount:${NAMESPACE}:default
+  allowPrivilegedContainer: false
+  allowHostPorts: false
+  groups:
+  - system:cluster-admins
+  allowHostPID: false
+  allowHostDirVolumePlugin: false
+  allowedCapabilities: []
+  kind: SecurityContextConstraints
+  allowHostIPC: false
+  runAsUser:
+    type: RunAsAny
+  supplementalGroups:
+    type: RunAsAny
+  fsGroup:
+    type: RunAsAny
+  apiVersion: security.openshift.io/v1
+  priority: ${{PRIORITY_LEVEL}}
+  volumes:
+  - configMap
+  - downwardAPI
+  - emptyDir
+  - persistentVolumeClaim
+  - projected
+  - secret
+  seLinuxContext:
+    type: MustRunAs
+  defaultAddCapabilities: []
+  allowHostNetwork: false
+  requiredDropCapabilities:
+  - MKNOD
+  metadata:
+    annotations:
+      kubernetes.io/description: anyuid provides all features of the restricted SCC
+        but allows users to run with any UID and any GID.
+    name: "anyuid"
+apiVersion: v1
+parameters:
+- required: true
+  displayName: Namespace
+  description: The NameSpace to Deploy to
+  name: NAMESPACE
+- value: '10'
+  displayName: Priority
+  description: A number to represent the priority of the defined SCC vs other SCCs.
+    1 is the highest priority. Null is the lowest. Ties go from the least privileged
+    to the most privileged.
+  name: PRIORITY_LEVEL

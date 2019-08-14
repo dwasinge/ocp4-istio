@@ -1,0 +1,31 @@
+# This is the default playbook and will create a standard (relatively large) install.
+---
+- name: Create Jaeger Operator
+  hosts: jaeger-operator
+  tasks:
+    - include_role:
+        name: openshift-applier/roles/openshift-applier
+
+- name: Create Kiali Operator
+  hosts: kiali-operator
+  tasks:
+    - include_role:
+        name: openshift-applier/roles/openshift-applier
+
+- name: Create Istio Operator
+  hosts: istio-operator
+  tasks:
+    - include_role:
+        name: openshift-applier/roles/openshift-applier
+
+- name: Create Service Mesh Control Plane
+  hosts: control-plane
+  tasks:
+    - include_role:
+        name: openshift-applier/roles/openshift-applier
+
+- name: Create Sample Application
+  hosts: sample-app
+  tasks:
+    - include_role:
+        name: openshift-applier/roles/openshift-applier

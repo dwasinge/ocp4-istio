@@ -1,0 +1,53 @@
+---
+kind: Template
+objects:
+- readOnlyRootFilesystem: false
+  users:
+  - system:admin
+  - system:serviceaccount:openshift-infra:build-controller
+  - system:serviceaccount:${NAMESPACE}:default
+  allowPrivilegedContainer: true
+  allowHostPorts: true
+  groups:
+  - system:cluster-admins
+  - system:nodes
+  - system:masters
+  allowHostPID: true
+  allowHostDirVolumePlugin: true
+  allowedCapabilities: 
+  - '*'
+  kind: SecurityContextConstraints
+  allowHostIPC: true
+  runAsUser:
+    type: RunAsAny
+  supplementalGroups:
+    type: RunAsAny
+  fsGroup:
+    type: RunAsAny
+  apiVersion: security.openshift.io/v1
+  priority: null
+  volumes:
+  - '*'
+  seLinuxContext:
+    type: RunAsAny
+  defaultAddCapabilities: null
+  allowHostNetwork: true
+  requiredDropCapabilities: null
+  allowPrivilegeEscalation: true
+  allowedUnsafeSysctls:
+  - '*'
+  seccompProfiles:
+  - '*'
+  metadata:
+    annotations:
+      kubernetes.io/description: 'privileged allows access to all privileged and host
+        features and the ability to run as any user, any group, any fsGroup, and with
+        any SELinux context.  WARNING: this is the most relaxed SCC and should be used
+        only for cluster administration. Grant with caution.'
+    name: "privileged"
+apiVersion: v1
+parameters:
+- required: true
+  displayName: Namespace
+  description: The NameSpace to Deploy to
+  name: NAMESPACE

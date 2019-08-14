@@ -1,0 +1,14 @@
+[jaeger-operator]
+jaeger-operator
+
+[kiali-operator]
+kiali-operator
+
+[istio-operator]
+istio-operator
+
+[control-plane]
+control-plane
+
+[sample-app]
+sample-app

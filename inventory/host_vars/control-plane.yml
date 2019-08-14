@@ -1,0 +1,24 @@
+---
+ansible_connection: local
+
+istio_system_namespace: istio-system
+istio_system:
+  NAMESPACE: "{{ istio_system_namespace }}"
+  NAMESPACE_DISPLAY_NAME: "{{ istio_system_namespace }}"
+
+openshift_cluster_content:
+- object: istio-operator
+  content:
+  - name: "{{ istio_system_namespace }}"
+    template: "https://raw.githubusercontent.com/redhat-cop/openshift-templates/master/project-requests/create-project.yml"
+    params_from_vars: "{{ istio_system }}"
+    action: create
+    tags:
+    - "{{ istio_system_namespace }}"
+    - projects
+    - "projects-{{ istio_system_namespace }}"
+  - name: istio-control-plane
+    file: "{{ playbook_dir }}/templates/istio/servicemeshcontrolplane_cr_full.yaml"
+    namespace: "{{ istio_system_namespace }}"
+    tags:
+    - istio-control-plane
