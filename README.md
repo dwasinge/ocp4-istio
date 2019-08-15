@@ -34,7 +34,7 @@ There are multiple Ansible inventories which divide the type of components to be
 * `kiali-operator` - Located in `inventory/host_vars/kiali-operator.yml` contains a collection of objects used to install the Kiali Operator in OpenShift
 * `istio-operator` - Located in `inventory/host_vars/istio-operator.yml` contains a collection of objects used to install the Istio Operator in OpenShift
 * `control-plane` - Located in `inventory/host_vars/control-plane.yml` creates the namespace and configuration for the Istio Operator to manage in OpenShift
-* `sample-app` - Located in `inventory/host_vars/sample-app.yml` contains a collection of objects used to install the Jaeger Operator in OpenShift
+* `sample-app` - Located in `inventory/host_vars/sample-app.yml` creates the objects for the BookInfo application and the VirtualService in OpenShift
 
 ## Getting Started
 
